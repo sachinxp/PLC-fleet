@@ -398,6 +398,14 @@ public class DataValue
     public uint StatusCode { get; set; } = 0x00000000; // Good
     public DateTime SourceTimestamp { get; set; } = DateTime.UtcNow;
 
+    private static long ToOpcUaTimestamp(DateTime dt)
+    {
+        // OPC UA epoch = Jan 1, 1601 (same as Windows FILETIME)
+        // .NET ticks are 100-ns intervals since Jan 1, 0001
+        // Difference: 1601-01-01 = 504911232000000000 ticks
+        return dt.Ticks - 504911232000000000L;
+    }
+
     public byte[] Encode()
     {
         var data = new List<byte>();
@@ -411,10 +419,25 @@ public class DataValue
             data.Add(0x01); // Boolean
             data.Add(b ? (byte)1 : (byte)0);
         }
+        else if (Value is short sv)
+        {
+            data.Add(0x04); // Int16
+            data.AddRange(BitConverter.GetBytes(sv));
+        }
+        else if (Value is ushort us)
+        {
+            data.Add(0x05); // UInt16
+            data.AddRange(BitConverter.GetBytes(us));
+        }
         else if (Value is int i)
         {
             data.Add(0x06); // Int32
             data.AddRange(BitConverter.GetBytes(i));
+        }
+        else if (Value is uint ui)
+        {
+            data.Add(0x07); // UInt32
+            data.AddRange(BitConverter.GetBytes(ui));
         }
         else if (Value is float f)
         {
@@ -436,8 +459,8 @@ public class DataValue
             data.Add(0x06); // Int32 default
             data.AddRange(BitConverter.GetBytes(0));
         }
-        // SourceTimestamp
-        data.AddRange(BitConverter.GetBytes(SourceTimestamp.ToBinary()));
+        // SourceTimestamp (OPC UA format: 100-ns intervals since 1601-01-01)
+        data.AddRange(BitConverter.GetBytes(ToOpcUaTimestamp(SourceTimestamp)));
         return data.ToArray();
     }
 }

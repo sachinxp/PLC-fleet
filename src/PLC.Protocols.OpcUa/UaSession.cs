@@ -186,29 +186,184 @@ public class UaSession : IDisposable
     private byte[]? HandleRead(byte[] body)
     {
         var values = new List<DataValue>();
-        // Read multiple nodes
-        if (body.Length > 12)
+        // Scan past RequestHeader to find NodesToRead array
+        int offset = 8; // skip serviceId(4) + requestHandle(4)
+        if (offset + 8 > body.Length) goto fallback;
+        offset += 8; // skip timestamp
+
+        if (offset + 4 > body.Length) goto fallback;
+        offset += 4; // skip returnDiagnostics
+
+        // Parse auditEntryId (String)
+        if (offset + 4 > body.Length) goto fallback;
+        int strLen = (int)BitConverter.ToUInt32(body, offset);
+        if (strLen == -1) offset += 4;
+        else offset += 4 + strLen;
+
+        if (offset + 4 > body.Length) goto fallback;
+        offset += 4; // skip timeoutHint
+
+        // Skip additionalHeader (ExtensionObject)
+        if (offset >= body.Length) goto fallback;
+        if ((body[offset] & 0x3F) == 0x00) offset += 2; // TwoByte NodeId (null)
+        else offset += 1; // skip at least encoding mask
+
+        if (offset + 12 > body.Length) goto fallback;
+        offset += 8; // skip MaxAge (double)
+        offset += 4; // skip TimestampsToReturn
+
+        // NodesToRead array length
+        int numNodes = (int)BitConverter.ToUInt32(body, offset);
+        offset += 4;
+
+        for (int i = 0; i < numNodes && offset + 2 <= body.Length; i++)
         {
-            var numNodes = BitConverter.ToUInt32(body, body.Length - 8);
-            // Simplified: read first requested node
-            foreach (var tag in _tags.Where(t => t.Enabled))
+            // Parse NodeId
+            byte encMask = body[offset];
+            uint nodeId = 0;
+            int nodeIdLen;
+            if ((encMask & 0x3F) == 0x00 && offset + 2 <= body.Length)
+            {
+                nodeId = body[offset + 1];
+                nodeIdLen = 2;
+            }
+            else if ((encMask & 0x3F) == 0x01 && offset + 4 <= body.Length)
+            {
+                nodeId = BitConverter.ToUInt16(body, offset + 2);
+                nodeIdLen = 4;
+            }
+            else break;
+            offset += nodeIdLen;
+            offset += 4; // skip AttributeId
+
+            // Match tag by NodeId
+            var tag = _tags.FirstOrDefault(t => t.Enabled && (uint)t.Name.GetHashCode() == nodeId);
+            if (tag != null)
             {
                 object? val = null;
                 lock (_tagValues) { _tagValues.TryGetValue(tag.Name, out val); }
                 values.Add(new DataValue { Value = val ?? tag.Simulation.Value });
-                if (values.Count >= 10) break;
+            }
+            else
+            {
+                values.Add(new DataValue { Value = 0, StatusCode = 0x80000000 }); // BadNodeId
             }
         }
 
+    fallback:
         if (values.Count == 0)
-            values.Add(new DataValue { Value = 0 });
+        {
+            // Fallback: return first enabled tag
+            var first = _tags.FirstOrDefault(t => t.Enabled);
+            values.Add(new DataValue
+            {
+                Value = first != null && _tagValues.TryGetValue(first.Name, out var v) ? v : 0
+            });
+        }
 
         return UaBinaryProtocol.EncodeReadResponse(_requestHandle, values);
     }
 
     private byte[]? HandleWrite(byte[] body)
     {
-        return CreateGenericResponse(UaBinaryProtocol.WriteRequestId);
+        var data = new List<byte>();
+        data.AddRange(BitConverter.GetBytes(DateTime.UtcNow.Ticks));
+        data.AddRange(BitConverter.GetBytes(_requestHandle));
+        data.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+
+        // Parse NodesToWrite array
+        uint numNodes = 0;
+        int offset = 8;
+        if (offset + 8 <= body.Length)
+        {
+            offset += 8; // skip timestamp
+            if (offset + 4 <= body.Length)
+                offset += 4; // skip returnDiagnostics
+
+            // Parse auditEntryId
+            if (offset + 4 <= body.Length)
+            {
+                int strLen = (int)BitConverter.ToUInt32(body, offset);
+                if (strLen == -1) offset += 4;
+                else offset += 4 + strLen;
+
+                if (offset + 4 <= body.Length)
+                {
+                    offset += 4; // skip timeoutHint
+                    if (offset < body.Length)
+                    {
+                        if ((body[offset] & 0x3F) == 0x00) offset += 2;
+                        else offset += 1;
+
+                        if (offset + 4 <= body.Length)
+                        {
+                            numNodes = BitConverter.ToUInt32(body, offset);
+                            offset += 4;
+
+                            for (int i = 0; i < numNodes && offset + 2 <= body.Length; i++)
+                            {
+                                byte encMask = body[offset];
+                                uint nodeId = 0;
+                                int nodeIdLen;
+                                if ((encMask & 0x3F) == 0x00 && offset + 2 <= body.Length)
+                                {
+                                    nodeId = body[offset + 1];
+                                    nodeIdLen = 2;
+                                }
+                                else if ((encMask & 0x3F) == 0x01 && offset + 4 <= body.Length)
+                                {
+                                    nodeId = BitConverter.ToUInt16(body, offset + 2);
+                                    nodeIdLen = 4;
+                                }
+                                else break;
+                                offset += nodeIdLen;
+                                offset += 4; // skip AttributeId
+
+                                if (offset >= body.Length) break;
+                                byte valMask = body[offset++];
+                                if ((valMask & 0x01) == 0) continue;
+                                if (offset >= body.Length) break;
+                                byte typeCode = body[offset];
+
+                                object? val = typeCode switch
+                                {
+                                    0x01 => offset + 2 <= body.Length ? (object)(body[++offset] != 0) : null,
+                                    0x04 => offset + 2 <= body.Length ? (object)(short)BitConverter.ToInt16(body, ++offset) : null,
+                                    0x06 => offset + 4 <= body.Length ? (object)BitConverter.ToInt32(body, ++offset) : null,
+                                    0x07 => offset + 4 <= body.Length ? (object)BitConverter.ToUInt32(body, ++offset) : null,
+                                    0x0A => offset + 4 <= body.Length ? (object)BitConverter.ToSingle(body, ++offset) : null,
+                                    0x0B => offset + 8 <= body.Length ? (object)BitConverter.ToDouble(body, ++offset) : null,
+                                    0x0C => ParseStringValue(body, ref offset),
+                                    _ => null
+                                };
+
+                                if (val != null)
+                                {
+                                    var tag = _tags.FirstOrDefault(t => t.Enabled && (uint)t.Name.GetHashCode() == nodeId);
+                                    if (tag != null)
+                                        lock (_tagValues) { _tagValues[tag.Name] = val; }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        data.AddRange(BitConverter.GetBytes(numNodes)); // Results count
+        data.AddRange(new byte[] { 0x00, 0x00, 0x00, 0x00 }); // Diagnostic count
+        return UaBinaryProtocol.BuildServiceResponse(UaBinaryProtocol.WriteRequestId, _requestHandle, data.ToArray());
+    }
+
+    private static string? ParseStringValue(byte[] body, ref int offset)
+    {
+        if (offset + 4 > body.Length) return null;
+        int len = (int)BitConverter.ToUInt32(body, offset);
+        offset += 4;
+        if (len == -1 || offset + len > body.Length) return null;
+        var result = System.Text.Encoding.UTF8.GetString(body, offset, len);
+        offset += len;
+        return result;
     }
 
     private byte[]? CreateGenericResponse(uint serviceId)
@@ -228,7 +383,7 @@ public class UaSession : IDisposable
             // RevisedMaxKeepAliveCount
             data.AddRange(BitConverter.GetBytes(10000u));
         }
-        if (serviceId == UaBinaryProtocol.CreateMonitoredItemsRequestId)
+        else if (serviceId == UaBinaryProtocol.CreateMonitoredItemsRequestId)
         {
             data.AddRange(BitConverter.GetBytes(0u)); // Results count
             data.AddRange(BitConverter.GetBytes(0u)); // Diagnostic count

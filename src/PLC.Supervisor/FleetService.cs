@@ -19,6 +19,28 @@ public class FleetService
         _persistence = persistence;
         _processManager = processManager;
         if (!Directory.Exists(FleetDir)) Directory.CreateDirectory(FleetDir);
+
+        _processManager.WorkerCrashed += id => MarkCrashed(id);
+        _processManager.WorkerRestarted += id => MarkRestarted(id);
+    }
+
+    private void MarkCrashed(string id)
+    {
+        if (_instances.TryGetValue(id, out var plc))
+        {
+            plc.State = PlcState.Error;
+            plc.ErrorCount++;
+            _persistence.SavePlc(plc);
+        }
+    }
+
+    private void MarkRestarted(string id)
+    {
+        if (_instances.TryGetValue(id, out var plc))
+        {
+            plc.State = PlcState.Running;
+            _persistence.SavePlc(plc);
+        }
     }
 
     public IReadOnlyCollection<PlcInstance> GetAll() => _instances.Values.ToList().AsReadOnly();

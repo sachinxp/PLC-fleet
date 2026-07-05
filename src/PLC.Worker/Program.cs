@@ -14,15 +14,36 @@ using PLC.Worker.SignalGeneration;
 
 class WorkerProgram
 {
+    static NamedPipeServer? _server;
+    static string _instanceId = "unknown";
+
     static async Task Main(string[] args)
     {
-        var instanceId = GetArg(args, "--instance") ?? "unknown";
-        var pipeName = GetArg(args, "--pipe") ?? $"PLCWorker_{instanceId}";
+        _instanceId = GetArg(args, "--instance") ?? "unknown";
+        var pipeName = GetArg(args, "--pipe") ?? $"PLCWorker_{_instanceId}";
 
-        var server = new NamedPipeServer(pipeName);
-        await server.WaitForConnectionAsync();
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            var ex = e.ExceptionObject as Exception;
+            if (_server != null)
+            {
+                try
+                {
+                    _server.SendAsync(new IpcMessage
+                    {
+                        Type = IpcMessageType.ErrorReport,
+                        Payload = ConfigSerializer.Serialize(new { InstanceId = _instanceId, Error = ex?.Message, StackTrace = ex?.StackTrace }),
+                        Timestamp = DateTime.UtcNow.Ticks
+                    }).GetAwaiter().GetResult();
+                }
+                catch { }
+            }
+        };
 
-        var msg = await server.ReceiveAsync();
+        _server = new NamedPipeServer(pipeName);
+        await _server.WaitForConnectionAsync();
+
+        var msg = await _server.ReceiveAsync();
         PlcInstance? plc = null;
         if (msg?.Type == IpcMessageType.ConfigSnapshot)
         {
@@ -130,7 +151,7 @@ class WorkerProgram
             });
         }
 
-        await server.SendAsync(new IpcMessage
+        await _server.SendAsync(new IpcMessage
         {
             Type = IpcMessageType.WorkerStarted,
             Timestamp = DateTime.UtcNow.Ticks
@@ -139,7 +160,7 @@ class WorkerProgram
         var running = true;
         while (running)
         {
-            var request = await server.ReceiveAsync();
+            var request = await _server.ReceiveAsync();
             if (request == null) break;
 
             switch (request.Type)
@@ -153,7 +174,7 @@ class WorkerProgram
                     adsListener?.Stop();
                     opcuaServer?.Stop();
                     scheduler.Dispose();
-                    await server.SendAsync(new IpcMessage
+                    await _server.SendAsync(new IpcMessage
                     {
                         Type = IpcMessageType.WorkerStopped,
                         Timestamp = DateTime.UtcNow.Ticks
@@ -164,7 +185,7 @@ class WorkerProgram
                     break;
 
                 case IpcMessageType.Ping:
-                    await server.SendAsync(new IpcMessage
+                    await _server.SendAsync(new IpcMessage
                     {
                         Type = IpcMessageType.Pong,
                         Timestamp = DateTime.UtcNow.Ticks
@@ -180,7 +201,7 @@ class WorkerProgram
         melsecListener?.Dispose();
         adsListener?.Dispose();
         opcuaServer?.Dispose();
-        server.Dispose();
+        _server.Dispose();
     }
 
     static string? GetArg(string[] args, string name)

@@ -175,7 +175,7 @@ public class MelsecHandler
     {
         if (value is short s) BinaryPrimitives.WriteUInt16LittleEndian(buffer[offset..], (ushort)s);
         else if (value is int i) BinaryPrimitives.WriteUInt16LittleEndian(buffer[offset..], (ushort)i);
-        else if (value is float f) BinaryPrimitives.WriteUInt16LittleEndian(buffer[offset..], (ushort)f);
+        else if (value is float f) BinaryPrimitives.WriteUInt16LittleEndian(buffer[offset..], (ushort)(int)f);
         else if (value is ushort u) BinaryPrimitives.WriteUInt16LittleEndian(buffer[offset..], u);
         else BinaryPrimitives.WriteUInt16LittleEndian(buffer[offset..], 0);
     }

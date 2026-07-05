@@ -132,15 +132,16 @@ public class S7IntegrationTests
         // Skip to S7 PDU
         var tpktPayloadLen = (s7resp[2] << 8) | s7resp[3];
         tpktPayloadLen.Should().BeGreaterThan(10);
-        // DT header at offset 4
-        s7resp[4].Should().Be(0x02); // COTP DT length
+        // DT header at offset 4 (LI=2: DT code + TPDU-number)
+        s7resp[4].Should().Be(0x02); // COTP LI (2 bytes follow: DT + TPDU)
         s7resp[5].Should().Be(0xF0); // COTP DT
-        // S7 PDU at offset 6
-        s7resp[6].Should().Be(0x32); // Protocol
-        s7resp[7].Should().Be(0x03); // AckData
+        s7resp[6].Should().Be(0x80); // TPDU-number
+        // S7 PDU at offset 7
+        s7resp[7].Should().Be(0x32); // Protocol
+        s7resp[8].Should().Be(0x03); // AckData
         // Read response should contain 42 (0x002A) as word value
         // Data area after params: return code (0xFF) + transport + length + value
-        var dataStart = 6 + 10 + 4; // S7 header(10) + params(4)
+        var dataStart = 7 + 10 + 4; // S7 header(10) + params(4)
         if (dataStart + 3 < readLen)
         {
             s7resp[dataStart].Should().Be(0xFF); // Success return code
@@ -188,9 +189,9 @@ public class S7IntegrationTests
         var read = await stream.ReadAsync(s7resp, 0, s7resp.Length);
         read.Should().BeGreaterThan(30);
 
-        // Verify S7 AcKData response
-        s7resp[6].Should().Be(0x32); // Protocol
-        s7resp[7].Should().Be(0x03); // AckData
+        // Verify S7 AcKData response (S7 PDU at offset 7 after 3-byte COTP DT)
+        s7resp[7].Should().Be(0x32); // Protocol
+        s7resp[8].Should().Be(0x03); // AckData
 
         listener.Stop();
     }
