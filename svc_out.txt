@@ -1,0 +1,47 @@
+[13:51:44 INF] PLC Simulator Supervisor starting on http://localhost:5001
+[13:51:44 INF] Now listening on: http://localhost:5001
+[13:51:44 INF] Application started. Press Ctrl+C to shut down.
+[13:51:44 INF] Hosting environment: Production
+[13:51:44 INF] Content root path: C:\Users\Admin\Documents\PLC Simulator OpenCode\src\PLC.Supervisor
+[13:51:49 INF] Request starting HTTP/1.1 GET http://localhost:5001/api/plcs - null null
+[13:51:49 INF] Executing endpoint 'FleetController.GetAll (PLC.Supervisor)'
+[13:51:50 INF] Route matched with {action = "GetAll", controller = "Fleet"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[PLC.Shared.Models.PlcInstance]] GetAll() on controller FleetController (PLC.Supervisor).
+[13:51:50 INF] Executing OkObjectResult, writing value of type 'System.Collections.ObjectModel.ReadOnlyCollection`1[[PLC.Shared.Models.PlcInstance, PLC.Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+[13:51:50 INF] Executed action FleetController.GetAll (PLC.Supervisor) in 65.2269ms
+[13:51:50 INF] Executed endpoint 'FleetController.GetAll (PLC.Supervisor)'
+[13:51:50 INF] Request finished HTTP/1.1 GET http://localhost:5001/api/plcs - 200 null application/json; charset=utf-8 122.7369ms
+[13:51:50 INF] Request starting HTTP/1.1 GET http://localhost:5001/api/system/info - null null
+[13:51:50 INF] Executing endpoint 'SystemController.GetInfo (PLC.Supervisor)'
+[13:51:50 INF] Route matched with {action = "GetInfo", controller = "System"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult GetInfo() on controller SystemController (PLC.Supervisor).
+[13:51:50 INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType5`3[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+[13:51:50 INF] Executed action SystemController.GetInfo (PLC.Supervisor) in 3.1714ms
+[13:51:50 INF] Executed endpoint 'SystemController.GetInfo (PLC.Supervisor)'
+[13:51:50 INF] Request finished HTTP/1.1 GET http://localhost:5001/api/system/info - 200 null application/json; charset=utf-8 7.9935ms
+[13:52:30 INF] Request starting HTTP/1.1 GET http://localhost:5001/api/plcs - null null
+[13:52:30 INF] Executing endpoint 'FleetController.GetAll (PLC.Supervisor)'
+[13:52:30 INF] Route matched with {action = "GetAll", controller = "Fleet"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[PLC.Shared.Models.PlcInstance]] GetAll() on controller FleetController (PLC.Supervisor).
+[13:52:30 INF] Executing OkObjectResult, writing value of type 'System.Collections.ObjectModel.ReadOnlyCollection`1[[PLC.Shared.Models.PlcInstance, PLC.Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+[13:52:30 INF] Executed action FleetController.GetAll (PLC.Supervisor) in 0.3794ms
+[13:52:30 INF] Executed endpoint 'FleetController.GetAll (PLC.Supervisor)'
+[13:52:30 INF] Request finished HTTP/1.1 GET http://localhost:5001/api/plcs - 200 null application/json; charset=utf-8 2.0649ms
+[13:52:30 INF] Request starting HTTP/1.1 POST http://localhost:5001/api/plcs - application/json 125
+[13:52:30 INF] Executing endpoint 'FleetController.Create (PLC.Supervisor)'
+[13:52:30 INF] Route matched with {action = "Create", controller = "Fleet"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[PLC.Shared.Models.PlcInstance]] Create(CreatePlcRequest) on controller FleetController (PLC.Supervisor).
+[13:52:30 INF] Executing CreatedAtActionResult, writing value of type 'PLC.Shared.Models.PlcInstance'.
+[13:52:30 INF] Executed action FleetController.Create (PLC.Supervisor) in 65.872ms
+[13:52:30 INF] Executed endpoint 'FleetController.Create (PLC.Supervisor)'
+[13:52:30 INF] Request finished HTTP/1.1 POST http://localhost:5001/api/plcs - 201 null application/json; charset=utf-8 75.0768ms
+[13:52:30 INF] Request starting HTTP/1.1 GET http://localhost:5001/api/plcs - null null
+[13:52:30 INF] Executing endpoint 'FleetController.GetAll (PLC.Supervisor)'
+[13:52:30 INF] Route matched with {action = "GetAll", controller = "Fleet"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[PLC.Shared.Models.PlcInstance]] GetAll() on controller FleetController (PLC.Supervisor).
+[13:52:30 INF] Executing OkObjectResult, writing value of type 'System.Collections.ObjectModel.ReadOnlyCollection`1[[PLC.Shared.Models.PlcInstance, PLC.Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+[13:52:30 INF] Executed action FleetController.GetAll (PLC.Supervisor) in 1.5863ms
+[13:52:30 INF] Executed endpoint 'FleetController.GetAll (PLC.Supervisor)'
+[13:52:30 INF] Request finished HTTP/1.1 GET http://localhost:5001/api/plcs - 200 null application/json; charset=utf-8 2.9397ms
+[13:52:30 INF] Request starting HTTP/1.1 GET http://localhost:5001/api/network/nics - null null
+[13:52:30 INF] Executing endpoint 'NetworkController.GetNics (PLC.Supervisor)'
+[13:52:30 INF] Route matched with {action = "GetNics", controller = "Network"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult GetNics() on controller NetworkController (PLC.Supervisor).
+[13:52:30 INF] Executing OkObjectResult, writing value of type 'System.String[]'.
+[13:52:30 INF] Executed action NetworkController.GetNics (PLC.Supervisor) in 48.0722ms
+[13:52:30 INF] Executed endpoint 'NetworkController.GetNics (PLC.Supervisor)'
+[13:52:30 INF] Request finished HTTP/1.1 GET http://localhost:5001/api/network/nics - 200 null application/json; charset=utf-8 50.7821ms

@@ -1,0 +1,16 @@
+{
+  "brand": "rockwell",
+  "schemaVersion": "1.0",
+  "tags": [
+    { "name": "Sim_Bool_01", "address": "Sim_Bool_01", "dataType": "Bool", "access": "ReadOnly", "description": "Boolean toggle", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 3000 } },
+    { "name": "Sim_Dint_01", "address": "Sim_Dint_01", "dataType": "Int32", "access": "ReadOnly", "description": "Ramp counter", "enabled": true, "simulation": { "profile": "ramp", "lowLimit": 0, "highLimit": 1000, "periodMs": 20000, "updateMs": 200 } },
+    { "name": "Sim_Real_01", "address": "Sim_Real_01", "dataType": "Float32", "access": "ReadOnly", "description": "Sine wave", "engUnit": "V", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 0, "highLimit": 24, "periodMs": 10000, "updateMs": 100 } },
+    { "name": "Sim_String_01", "address": "Sim_String_01", "dataType": "String", "access": "ReadOnly", "description": "Machine status", "enabled": true, "simulation": { "profile": "textCycle", "values": ["RUNNING", "IDLE", "FAULT", "MAINTENANCE"], "intervalMs": 10000 } },
+    { "name": "Sim_Real_Arr", "address": "Sim_Real_Arr[10]", "dataType": "Float32", "access": "ReadOnly", "description": "Array of reals", "enabled": true, "simulation": { "profile": "random", "lowLimit": 0, "highLimit": 100, "distribution": "uniform", "updateMs": 500 } },
+    { "name": "Sim_Bool_02", "address": "Sim_Bool_02", "dataType": "Bool", "access": "ReadOnly", "description": "Pulse generator", "enabled": true, "simulation": { "profile": "pulse", "periodMs": 10000, "dutyPercent": 30 } },
+    { "name": "Sim_Dint_02", "address": "Sim_Dint_02", "dataType": "Int32", "access": "ReadWrite", "description": "Echo test", "enabled": true, "simulation": { "profile": "echo", "value": 100 } },
+    { "name": "Sim_Real_02", "address": "Sim_Real_02", "dataType": "Float32", "access": "ReadOnly", "description": "Square wave", "engUnit": "Hz", "enabled": true, "simulation": { "profile": "square", "lowLimit": 0, "highLimit": 60, "periodMs": 8000, "dutyPercent": 50 } },
+    { "name": "Sim_Dint_03", "address": "Sim_Dint_03", "dataType": "Int32", "access": "ReadOnly", "description": "Step counter", "enabled": true, "simulation": { "profile": "step", "lowLimit": 0, "highLimit": 500, "step": 10, "direction": "Up", "atLimit": "autoReverse", "updateMs": 500 } },
+    { "name": "Sim_Bool_03", "address": "Sim_Bool_03", "dataType": "Bool", "access": "ReadOnly", "description": "Static true", "enabled": true, "simulation": { "profile": "static", "value": 0 } }
+  ]
+}

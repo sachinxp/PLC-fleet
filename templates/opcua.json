@@ -1,0 +1,16 @@
+{
+  "brand": "opcua",
+  "schemaVersion": "1.0",
+  "tags": [
+    { "name": "BoolToggle", "address": "ns=2;s=/Objects/Simulator/Bool/BoolToggle", "dataType": "Bool", "access": "ReadOnly", "description": "Boolean toggle", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 3000 } },
+    { "name": "Int32Counter", "address": "ns=2;s=/Objects/Simulator/Numeric/Int32Counter", "dataType": "Int32", "access": "ReadOnly", "description": "Ramp counter", "enabled": true, "simulation": { "profile": "ramp", "lowLimit": 0, "highLimit": 10000, "periodMs": 30000, "updateMs": 100 } },
+    { "name": "FloatSine", "address": "ns=2;s=/Objects/Simulator/Numeric/FloatSine", "dataType": "Float32", "access": "ReadOnly", "description": "Sine waveform", "engUnit": "V", "enabled": true, "simulation": { "profile": "sine", "lowLimit": -10, "highLimit": 10, "periodMs": 10000, "updateMs": 100 } },
+    { "name": "StringStatus", "address": "ns=2;s=/Objects/Simulator/String/StringStatus", "dataType": "String", "access": "ReadOnly", "description": "Status text", "enabled": true, "simulation": { "profile": "textCycle", "values": ["RUNNING", "IDLE", "FAULT", "MAINTENANCE", "STOPPED"], "intervalMs": 8000 } },
+    { "name": "DateTimeNow", "address": "ns=2;s=/Objects/Simulator/DateTime/DateTimeNow", "dataType": "DateTime", "access": "ReadOnly", "description": "Current timestamp", "enabled": true, "simulation": { "profile": "clock", "format": "yyyy-MM-ddTHH:mm:ss.fffZ" } },
+    { "name": "FloatArray", "address": "ns=2;s=/Objects/Simulator/Arrays/FloatArray", "dataType": "Float32", "access": "ReadOnly", "description": "Array of 10 floats", "enabled": true, "simulation": { "profile": "random", "lowLimit": 0, "highLimit": 100, "distribution": "uniform", "updateMs": 500, "seed": 123 } },
+    { "name": "Int32Step", "address": "ns=2;s=/Objects/Simulator/Numeric/Int32Step", "dataType": "Int32", "access": "ReadOnly", "description": "Step auto-reverse", "enabled": true, "simulation": { "profile": "step", "lowLimit": 0, "highLimit": 500, "step": 10, "direction": "Up", "atLimit": "autoReverse", "updateMs": 250 } },
+    { "name": "DoublePrecision", "address": "ns=2;s=/Objects/Simulator/Numeric/DoublePrecision", "dataType": "Float64", "access": "ReadOnly", "description": "Double precision sine", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 0, "highLimit": 1, "periodMs": 20000, "updateMs": 200 } },
+    { "name": "EchoInt32", "address": "ns=2;s=/Objects/Simulator/WriteTest/EchoInt32", "dataType": "Int32", "access": "ReadWrite", "description": "Write echo test", "enabled": true, "simulation": { "profile": "echo", "value": 42 } },
+    { "name": "EchoFloat", "address": "ns=2;s=/Objects/Simulator/WriteTest/EchoFloat", "dataType": "Float32", "access": "ReadWrite", "description": "Write echo float", "enabled": true, "simulation": { "profile": "echo", "value": 3.14159 } }
+  ]
+}

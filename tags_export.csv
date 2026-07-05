@@ -1,0 +1,2 @@
+Name,Address,DataType,ScanRate,Protocol,Description,ClientAccess,Enabled
+Temp,DB10.DBW100,Word,1000,ads,Oven Temp,ReadOnly,1

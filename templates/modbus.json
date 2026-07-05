@@ -1,0 +1,16 @@
+{
+  "brand": "modbus",
+  "schemaVersion": "1.0",
+  "tags": [
+    { "name": "Coil_01", "address": "1", "dataType": "Bool", "access": "ReadWrite", "description": "Output coil 1", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 2000 } },
+    { "name": "Coil_02", "address": "2", "dataType": "Bool", "access": "ReadOnly", "description": "Discrete input", "enabled": true, "simulation": { "profile": "pulse", "periodMs": 5000, "dutyPercent": 50 } },
+    { "name": "AI_Temp", "address": "30001", "dataType": "Int16", "access": "ReadOnly", "description": "Analog input temperature", "engUnit": "°C", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 0, "highLimit": 150, "periodMs": 15000, "updateMs": 200 } },
+    { "name": "HR_Speed", "address": "40001", "dataType": "Int16", "access": "ReadWrite", "description": "Motor speed", "engUnit": "RPM", "enabled": true, "simulation": { "profile": "ramp", "lowLimit": 0, "highLimit": 1800, "periodMs": 25000, "updateMs": 500 } },
+    { "name": "HR_Pressure", "address": "40003", "dataType": "Float32", "access": "ReadOnly", "description": "Pressure (float ABCD)", "engUnit": "bar", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 0, "highLimit": 16, "periodMs": 12000, "updateMs": 200, "noisePercent": 3 } },
+    { "name": "HR_Pressure_CDAB", "address": "40005", "dataType": "Float32", "access": "ReadOnly", "description": "Pressure (float CDAB)", "engUnit": "bar", "enabled": true, "simulation": { "profile": "step", "lowLimit": 0, "highLimit": 16, "step": 0.5, "direction": "Up", "atLimit": "autoReverse", "updateMs": 1000 } },
+    { "name": "HR_Totalizer", "address": "40009", "dataType": "Int32", "access": "ReadOnly", "description": "Total flow", "enabled": true, "simulation": { "profile": "counter", "step": 1, "rolloverAt": 100000, "updateMs": 1000 } },
+    { "name": "HR_Echo", "address": "40101", "dataType": "Int16", "access": "ReadWrite", "description": "Write test", "enabled": true, "simulation": { "profile": "echo", "value": 0 } },
+    { "name": "DI_Status", "address": "10001", "dataType": "Bool", "access": "ReadOnly", "description": "Digital input status", "enabled": true, "simulation": { "profile": "random", "lowLimit": 0, "highLimit": 1, "distribution": "uniform", "updateMs": 3000 } },
+    { "name": "HR_SineDouble", "address": "40013", "dataType": "Float64", "access": "ReadOnly", "description": "Double precision sine", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 0, "highLimit": 1, "periodMs": 20000, "updateMs": 200 } }
+  ]
+}

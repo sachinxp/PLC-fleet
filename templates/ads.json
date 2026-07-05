@@ -1,0 +1,16 @@
+{
+  "brand": "ads",
+  "schemaVersion": "1.0",
+  "tags": [
+    { "name": "MAIN_bPump1", "address": "MAIN.bPump1", "dataType": "Bool", "access": "ReadOnly", "description": "Pump 1 running", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 3000 } },
+    { "name": "MAIN_bPump2", "address": "MAIN.bPump2", "dataType": "Bool", "access": "ReadOnly", "description": "Pump 2 running", "enabled": true, "simulation": { "profile": "pulse", "periodMs": 8000, "dutyPercent": 60 } },
+    { "name": "MAIN_nCount1", "address": "MAIN.nCount1", "dataType": "Int32", "access": "ReadOnly", "description": "Production counter 1", "enabled": true, "simulation": { "profile": "counter", "step": 1, "rolloverAt": 99999, "updateMs": 200 } },
+    { "name": "MAIN_fTemp1", "address": "MAIN.fTemp1", "dataType": "Float32", "access": "ReadOnly", "description": "Zone 1 temperature", "engUnit": "°C", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 20, "highLimit": 80, "periodMs": 15000, "updateMs": 200, "noisePercent": 2 } },
+    { "name": "MAIN_fTemp2", "address": "MAIN.fTemp2", "dataType": "Float32", "access": "ReadOnly", "description": "Zone 2 temperature", "engUnit": "°C", "enabled": true, "simulation": { "profile": "ramp", "lowLimit": 20, "highLimit": 60, "periodMs": 25000, "updateMs": 500 } },
+    { "name": "MAIN_sStatus1", "address": "MAIN.sStatus1", "dataType": "String", "access": "ReadOnly", "description": "Machine status", "enabled": true, "simulation": { "profile": "textCycle", "values": ["INIT", "RUN", "STOP", "ERR"], "intervalMs": 12000 } },
+    { "name": "GVL_stMachine_nRPM", "address": "GVL.stMachine.nRPM", "dataType": "Int32", "access": "ReadOnly", "description": "Spindle RPM (nested)", "engUnit": "RPM", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 0, "highLimit": 3000, "periodMs": 30000, "updateMs": 500 } },
+    { "name": "GVL_stMachine_bRunning", "address": "GVL.stMachine.bRunning", "dataType": "Bool", "access": "ReadOnly", "description": "Machine running (nested)", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 10000 } },
+    { "name": "MAIN_fEcho", "address": "MAIN.fEcho", "dataType": "Float32", "access": "ReadWrite", "description": "Write test float", "enabled": true, "simulation": { "profile": "echo", "value": 3.14 } },
+    { "name": "MAIN_nStepTest", "address": "MAIN.nStepTest", "dataType": "Int32", "access": "ReadOnly", "description": "Step with auto-reverse", "enabled": true, "simulation": { "profile": "step", "lowLimit": -100, "highLimit": 100, "step": 5, "direction": "Up", "atLimit": "autoReverse", "updateMs": 300 } }
+  ]
+}

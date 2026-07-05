@@ -1,0 +1,120 @@
+{
+  "generated": "2026-07-05",
+  "description": "PLC Simulator instance connections and endpoint configurations",
+  "instances": [
+    {
+      "id": "b0372cd9ba3c",
+      "name": "Siemens-Main",
+      "brand": "siemens",
+      "endpoint": "127.0.0.10:102",
+      "protocol": "S7 (ISO-on-TCP)",
+      "encoding": "binary (TPKT + COTP + S7 PDU)",
+      "connectionSequence": [
+        "1. TCP connect to 127.0.0.10:102",
+        "2. Send COTP Connection Request (CR) - type 0x11",
+        "3. Receive COTP Connection Confirm (CC) - type 0x11",
+        "4. Send S7 Setup Communication (ROSCTR=Job, params[0]=0xF0)",
+        "5. Receive S7 AckData (ROSCTR=0x03)",
+        "6. Send ReadVar / WriteVar requests"
+      ],
+      "tagAddressFormats": {
+        "Bool": "I0.0, Q0.0, M0.0, DB1.DBX0.0",
+        "Int16": "IW2, QW2, MW2, DB1.DBW2",
+        "Int32": "ID20, QD20, DB1.DBD20",
+        "Float32": "ID4, QD4, MD4, DB1.DBD30"
+      },
+      "s7AreaCodes": {
+        "Input": "0x81",
+        "Output": "0x82",
+        "Merker": "0x83",
+        "DataBlock": "0x84"
+      }
+    },
+    {
+      "id": "3b3cd8bdb0ef",
+      "name": "Modbus-Main",
+      "brand": "modbus",
+      "endpoint": "127.0.0.20:502",
+      "protocol": "Modbus TCP",
+      "encoding": "binary (MBAP + PDU)",
+      "supportedFunctionCodes": {
+        "FC01": "Read Coils (addr 1-6)",
+        "FC02": "Read Discrete Inputs (addr 10001-10006)",
+        "FC03": "Read Holding Registers (addr 40001-41004)",
+        "FC04": "Read Input Registers (addr 30001-30003)",
+        "FC05": "Write Single Coil",
+        "FC06": "Write Single Register",
+        "FC15": "Write Multiple Coils",
+        "FC16": "Write Multiple Registers",
+        "FC22": "Mask Write Register",
+        "FC23": "Read/Write Multiple Registers"
+      },
+      "tagAddressFormats": {
+        "Coil": "1-6",
+        "DiscreteInput": "10001-10006",
+        "InputRegister": "30001-30003",
+        "HoldingRegister": "40001-41004"
+      }
+    },
+    {
+      "id": "671b80b77826",
+      "name": "Rockwell-Main",
+      "brand": "rockwell",
+      "endpoint": "127.0.0.30:44818",
+      "protocol": "CIP Ethernet/IP",
+      "encoding": "binary (CIP encapsulation + CIP atom-style tags)",
+      "tagAddressFormats": {
+        "Bool": "Input_01, Output_01, Memory_01, Program_01",
+        "Int32": "Input_02, Output_02, Memory_02, Program_02",
+        "Float32": "Input_03, Output_03, Memory_03, Program_03",
+        "String": "Program_Str_01"
+      }
+    },
+    {
+      "id": "9d2194bca9e7",
+      "name": "Mitsubishi-Main",
+      "brand": "mitsubishi",
+      "endpoint": "127.0.0.40:3005",
+      "protocol": "MELSEC SLMP (binary 3E frame)",
+      "encoding": "binary (SLMP header + command/data)",
+      "tagAddressFormats": {
+        "Bool": "X0, X1, Y0, Y1, M0, M1",
+        "Int16": "D0, D2, W0",
+        "Int32": "D4, D6, W2",
+        "Float32": "D8, D10",
+        "String": "D12"
+      }
+    },
+    {
+      "id": "442199e3b02a",
+      "name": "Beckhoff-Main",
+      "brand": "beckhoff",
+      "endpoint": "127.0.0.50:48898",
+      "protocol": "ADS (TwinCAT)",
+      "encoding": "binary (AMS Header + ADS data)",
+      "tagAddressFormats": {
+        "Bool": "MAIN.InputBool_01, MAIN.OutputBool_01, MAIN.MemoryBool_01",
+        "Int32": "MAIN.InputInt_01, MAIN.OutputInt_01, MAIN.MemoryInt_01",
+        "Float32": "MAIN.InputReal_01, MAIN.OutputReal_01, MAIN.MemoryReal_01",
+        "String": "MAIN.InfoString_01"
+      }
+    },
+    {
+      "id": "c14af7981b2e",
+      "name": "OPCUA-Main",
+      "brand": "opcUa",
+      "endpoint": "127.0.0.60:4840",
+      "protocol": "OPC UA Binary",
+      "encoding": "OPC UA Binary (ua-tcp binary protocol)",
+      "serverUrl": "opc.tcp://127.0.0.60:4840",
+      "applicationUri": "urn:opcua-main:opcua",
+      "tagAddressFormats": {
+        "Bool": "ns=2;s=/Objects/Simulator/Input/Input_Bool_01",
+        "Int16": "ns=2;s=/Objects/Simulator/Input/Input_Int16_01",
+        "Float32": "ns=2;s=/Objects/Simulator/Input/Input_Float_01",
+        "String": "ns=2;s=/Objects/Simulator/Output/Output_String_01"
+      },
+      "nodeHierarchy": "/Objects/Simulator/{Input,Output,Memory,Program,Diagnostics}"
+    }
+  ]
+}

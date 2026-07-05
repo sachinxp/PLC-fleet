@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PLC.Shared\PLC.Shared.csproj" />
+    <ProjectReference Include="..\PLC.Protocols.Modbus\PLC.Protocols.Modbus.csproj" />
+    <ProjectReference Include="..\PLC.Protocols.S7\PLC.Protocols.S7.csproj" />
+    <ProjectReference Include="..\PLC.Protocols.Rockwell\PLC.Protocols.Rockwell.csproj" />
+    <ProjectReference Include="..\PLC.Protocols.Melsec\PLC.Protocols.Melsec.csproj" />
+    <ProjectReference Include="..\PLC.Protocols.Ads\PLC.Protocols.Ads.csproj" />
+    <ProjectReference Include="..\PLC.Protocols.OpcUa\PLC.Protocols.OpcUa.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

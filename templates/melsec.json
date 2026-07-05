@@ -1,0 +1,28 @@
+{
+  "brand": "melsec",
+  "schemaVersion": "1.0",
+  "tags": [
+    { "name": "M_Start", "address": "M0", "dataType": "Bool", "access": "ReadOnly", "description": "Start latch", "enabled": true, "simulation": { "profile": "static", "value": 0 } },
+    { "name": "M_Running", "address": "M1", "dataType": "Bool", "access": "ReadOnly", "description": "Running flag", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 3000 } },
+    { "name": "M_Fault", "address": "M10", "dataType": "Bool", "access": "ReadOnly", "description": "Fault latch", "enabled": true, "simulation": { "profile": "random", "lowLimit": 0, "highLimit": 1, "distribution": "uniform", "updateMs": 10000, "seed": 42 } },
+    { "name": "X_Sensor_A", "address": "X0", "dataType": "Bool", "access": "ReadOnly", "description": "Proximity sensor A", "enabled": true, "simulation": { "profile": "pulse", "periodMs": 6000, "dutyPercent": 20 } },
+    { "name": "X_Sensor_B", "address": "X1", "dataType": "Bool", "access": "ReadOnly", "description": "Proximity sensor B", "enabled": true, "simulation": { "profile": "pulse", "periodMs": 8000, "dutyPercent": 25 } },
+    { "name": "X_Limit", "address": "X10", "dataType": "Bool", "access": "ReadOnly", "description": "Limit switch", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 5000 } },
+    { "name": "Y_Pump", "address": "Y0", "dataType": "Bool", "access": "ReadOnly", "description": "Pump relay", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 4000 } },
+    { "name": "Y_Valve", "address": "Y1", "dataType": "Bool", "access": "ReadOnly", "description": "Valve relay", "enabled": true, "simulation": { "profile": "pulse", "periodMs": 10000, "dutyPercent": 35 } },
+    { "name": "Y_Alarm", "address": "Y20", "dataType": "Bool", "access": "ReadWrite", "description": "Alarm output", "enabled": true, "simulation": { "profile": "echo", "value": 0 } },
+    { "name": "B_Status_0", "address": "B0", "dataType": "Bool", "access": "ReadOnly", "description": "Link relay B0", "enabled": true, "simulation": { "profile": "toggle", "intervalMs": 2000 } },
+    { "name": "B_Status_1", "address": "B1", "dataType": "Bool", "access": "ReadOnly", "description": "Link relay B1", "enabled": true, "simulation": { "profile": "pulse", "periodMs": 3000, "dutyPercent": 50 } },
+    { "name": "D_Counter", "address": "D100", "dataType": "Int16", "access": "ReadOnly", "description": "Production count", "enabled": true, "simulation": { "profile": "counter", "step": 1, "rolloverAt": 5000, "updateMs": 500 } },
+    { "name": "D_Temperature", "address": "D200", "dataType": "Float32", "access": "ReadOnly", "description": "Oven temperature", "engUnit": "°C", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 100, "highLimit": 250, "periodMs": 20000, "updateMs": 500 } },
+    { "name": "D_Pressure", "address": "D300", "dataType": "Int32", "access": "ReadOnly", "description": "Hydraulic pressure", "enabled": true, "simulation": { "profile": "ramp", "lowLimit": 0, "highLimit": 200, "periodMs": 30000, "updateMs": 200 } },
+    { "name": "D_Speed", "address": "D400", "dataType": "Int16", "access": "ReadWrite", "description": "Conveyor speed", "engUnit": "m/min", "enabled": true, "simulation": { "profile": "step", "lowLimit": 0, "highLimit": 50, "step": 2, "direction": "Up", "atLimit": "autoReverse", "updateMs": 1000 } },
+    { "name": "D_Echo", "address": "D500", "dataType": "Int16", "access": "ReadWrite", "description": "Write-back test", "enabled": true, "simulation": { "profile": "echo", "value": 99 } },
+    { "name": "W_Control", "address": "W0", "dataType": "UInt16", "access": "ReadOnly", "description": "Control word", "enabled": true, "simulation": { "profile": "static", "value": 0 } },
+    { "name": "W_Status", "address": "W1", "dataType": "UInt16", "access": "ReadOnly", "description": "Status word", "enabled": true, "simulation": { "profile": "counter", "step": 1, "rolloverAt": 65535, "updateMs": 3000 } },
+    { "name": "R_Analog_1", "address": "R0", "dataType": "Float32", "access": "ReadOnly", "description": "Analog ch1 (normal dist)", "enabled": true, "simulation": { "profile": "random", "lowLimit": 0, "highLimit": 100, "distribution": "normal", "updateMs": 200, "seed": 42 } },
+    { "name": "R_Analog_2", "address": "R2", "dataType": "Float32", "access": "ReadOnly", "description": "Analog ch2", "enabled": true, "simulation": { "profile": "sine", "lowLimit": 4, "highLimit": 20, "periodMs": 12000, "updateMs": 200 } },
+    { "name": "ZR_Extended", "address": "ZR100", "dataType": "Int16", "access": "ReadOnly", "description": "Extended file register", "enabled": true, "simulation": { "profile": "step", "lowLimit": 0, "highLimit": 1000, "step": 10, "direction": "Up", "atLimit": "autoReverse", "updateMs": 500 } },
+    { "name": "ZR_Echo", "address": "ZR200", "dataType": "Int16", "access": "ReadWrite", "description": "Extended register echo", "enabled": true, "simulation": { "profile": "echo", "value": 0 } }
+  ]
+}
